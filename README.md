@@ -2,6 +2,8 @@
 
 The Java Music Player is a comprehensive music player application developed in Java that provides users with the ability to manage and enjoy their music collection efficiently. The application offers a wide range of essential functionalities, allowing users to import music files, organize them in playlists, and play their favorite songs with ease.
 
+![My Photo](out/production/Screenshot (49gt).png)
+
 ### Key Features
 
 - **Music File Import**: The application supports importing music files from local storage or specified directories. It handles common audio file formats such as MP3, WAV, and FLAC, ensuring compatibility with a wide range of music files.
