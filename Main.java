@@ -75,7 +75,6 @@ class MusicPlayer {
         return library;
     }
 
-
     public MusicPlayer() {
         this.library = new ArrayList<>();
         this.playlists = new ArrayList<>();
@@ -167,6 +166,10 @@ public class Main {
             System.out.println("4. Pause Song");
             System.out.println("5. Stop Song");
             System.out.println("6. Set Volume");
+            System.out.println("7. Add Song to Library");
+            System.out.println("8. Create Playlist");
+            System.out.println("9. Add Song to Playlist");
+            System.out.println("10. Remove Song from Playlist");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -199,6 +202,51 @@ public class Main {
                     System.out.print("Enter the volume (0-100): ");
                     double volume = scanner.nextDouble();
                     player.setVolume(volume);
+                    break;
+                case 7:
+                    System.out.print("Enter the song title: ");
+                    scanner.nextLine(); // Consume the newline character
+                    String newSongTitle = scanner.nextLine();
+                    System.out.print("Enter the artist name: ");
+                    String newSongArtist = scanner.nextLine();
+                    System.out.print("Enter the album name: ");
+                    String newSongAlbum = scanner.nextLine();
+                    System.out.print("Enter the duration: ");
+                    double newSongDuration = scanner.nextDouble();
+                    Song newSong = new Song(newSongTitle, newSongArtist, newSongAlbum, newSongDuration);
+                    player.importSong(newSong);
+                    System.out.println("Song added to the library.");
+                    break;
+                case 8:
+                    System.out.print("Enter the playlist name: ");
+                    scanner.nextLine(); // Consume the newline character
+                    String playlistName = scanner.nextLine();
+                    player.createPlaylist(playlistName);
+                    System.out.println("Playlist created.");
+                    break;
+                case 9:
+                    player.displayLibrary();
+                    System.out.print("Enter the song number to add to the playlist: ");
+                    int songIndex = scanner.nextInt();
+                    player.displayPlaylists();
+                    System.out.print("Enter the playlist number to add the song: ");
+                    int playlistIndex = scanner.nextInt();
+                    Song songToAdd = player.getLibrary().get(songIndex - 1);
+                    Playlist playlistToAdd = player.getPlaylists().get(playlistIndex - 1);
+                    player.addSongToPlaylist(songToAdd, playlistToAdd);
+                    System.out.println("Song added to the playlist.");
+                    break;
+                case 10:
+                    player.displayPlaylists();
+                    System.out.print("Enter the playlist number to remove the song: ");
+                    int playlistToRemoveIndex = scanner.nextInt();
+                    Playlist playlistToRemove = player.getPlaylists().get(playlistToRemoveIndex - 1);
+                    playlistToRemove.displaySongs();
+                    System.out.print("Enter the song number to remove from the playlist: ");
+                    int songToRemoveIndex = scanner.nextInt();
+                    Song songToRemove = playlistToRemove.getSongs().get(songToRemoveIndex - 1);
+                    player.removeSongFromPlaylist(songToRemove, playlistToRemove);
+                    System.out.println("Song removed from the playlist.");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
