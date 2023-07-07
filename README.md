@@ -9,7 +9,7 @@ The Java Music Player is a comprehensive music player application developed in J
 <a href="https://freeimage.host/i/HsKpTSS"><img src="https://iili.io/HsKpTSS.md.png" alt="HsKpTSS.md.png" border="0"></a>
 
 
-###Updates-
+### Updates-
 
 Graphical User Interface (GUI): A user-friendly GUI has been integrated into the music player application, providing a visually appealing interface for users to interact with. The GUI includes separate panels for the music library and playlists, allowing users to easily navigate and manage their music collection.
 
