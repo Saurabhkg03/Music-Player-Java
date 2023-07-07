@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 class Song {
     private String title;
@@ -45,6 +48,10 @@ class Playlist {
         return name;
     }
 
+    public List<Song> getSongs() {
+        return songs;
+    }
+
     public void addSong(Song song) {
         songs.add(song);
     }
@@ -70,15 +77,23 @@ class MusicPlayer {
     private List<Song> library;
     private List<Playlist> playlists;
     private double volume;
-
-    public List<Song> getLibrary() {
-        return library;
-    }
+    private boolean isPlaying;
+    private int currentSongIndex;
 
     public MusicPlayer() {
         this.library = new ArrayList<>();
         this.playlists = new ArrayList<>();
         this.volume = 50.0; // Default volume
+        this.isPlaying = false;
+        this.currentSongIndex = -1;
+    }
+
+    public List<Song> getLibrary() {
+        return library;
+    }
+
+    public List<Playlist> getPlaylists() {
+        return playlists;
     }
 
     public void importSong(Song song) {
@@ -118,21 +133,67 @@ class MusicPlayer {
         }
     }
 
-    public void playSong(Song song) {
+    public void playSong(int index) {
+        if (index < 0 || index >= library.size()) {
+            System.out.println("Invalid song index.");
+            return;
+        }
+
+        if (isPlaying) {
+            System.out.println("Song is already playing.");
+            return;
+        }
+
+        Song song = library.get(index);
         System.out.println("Now playing: " + song.getTitle() + " - " + song.getArtist());
+        isPlaying = true;
+        currentSongIndex = index;
     }
 
     public void pauseSong() {
-        System.out.println("Song paused.");
+        if (isPlaying) {
+            System.out.println("Song paused.");
+            isPlaying = false;
+        } else {
+            System.out.println("No song is currently playing.");
+        }
+    }
+
+    public void resumeSong() {
+        if (!isPlaying && currentSongIndex != -1) {
+            Song song = library.get(currentSongIndex);
+            System.out.println("Resuming: " + song.getTitle() + " - " + song.getArtist());
+            isPlaying = true;
+        } else {
+            System.out.println("No paused song found.");
+        }
     }
 
     public void stopSong() {
-        System.out.println("Song stopped.");
+        if (isPlaying) {
+            Song song = library.get(currentSongIndex);
+            System.out.println("Stopping: " + song.getTitle() + " - " + song.getArtist());
+            isPlaying = false;
+            currentSongIndex = -1;
+        } else {
+            System.out.println("No song is currently playing.");
+        }
     }
 
     public void setVolume(double volume) {
         this.volume = volume;
         System.out.println("Volume set to: " + volume);
+    }
+
+    public void shufflePlaylist(Playlist playlist) {
+        if (playlist == null || playlist.getName().equals("Favourite Songs")) {
+            System.out.println("Cannot shuffle the main playlist.");
+            return;
+        }
+
+        List<Song> songs = playlist.getSongs();
+        java.util.Collections.shuffle(songs);
+        playlist.displaySongs();
     }
 }
 
@@ -150,107 +211,60 @@ public class Main {
         player.importSong(song3);
         player.importSong(song4);
         player.importSong(song5);
-
         Playlist playlist1 = new Playlist("Favourite Songs");
         player.createPlaylist(playlist1.getName());
         player.addSongToPlaylist(song1, playlist1);
         player.addSongToPlaylist(song2, playlist1);
 
-        Scanner scanner = new Scanner(System.in);
-        boolean running = true;
-        while (running) {
-            System.out.println("______________________________________________________________");
-            System.out.println("1. Display Library");
-            System.out.println("2. Display Playlists");
-            System.out.println("3. Play Song");
-            System.out.println("4. Pause Song");
-            System.out.println("5. Stop Song");
-            System.out.println("6. Set Volume");
-            System.out.println("7. Add Song to Library");
-            System.out.println("8. Create Playlist");
-            System.out.println("9. Add Song to Playlist");
-            System.out.println("10. Remove Song from Playlist");
-            System.out.println("0. Exit");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
+        JFrame frame = new JFrame("Music Player");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setLayout(new BorderLayout());
 
-            switch (choice) {
-                case 0:
-                    running = false;
-                    System.out.println("Goodbye!");
-                    break;
-                case 1:
-                    player.displayLibrary();
-                    break;
-                case 2:
-                    player.displayPlaylists();
-                    break;
-                case 3:
-                    player.displayLibrary();
-                    System.out.print("Enter the song number to play: ");
-                    int songNumber = scanner.nextInt();
-                    Song song = player.getLibrary().get(songNumber - 1);
-                    player.playSong(song);
-                    break;
-                case 4:
-                    player.pauseSong();
-                    break;
-                case 5:
-                    player.stopSong();
-                    break;
-                case 6:
-                    System.out.print("Enter the volume (0-100): ");
-                    double volume = scanner.nextDouble();
-                    player.setVolume(volume);
-                    break;
-                case 7:
-                    System.out.print("Enter the song title: ");
-                    scanner.nextLine(); // Consume the newline character
-                    String newSongTitle = scanner.nextLine();
-                    System.out.print("Enter the artist name: ");
-                    String newSongArtist = scanner.nextLine();
-                    System.out.print("Enter the album name: ");
-                    String newSongAlbum = scanner.nextLine();
-                    System.out.print("Enter the duration: ");
-                    double newSongDuration = scanner.nextDouble();
-                    Song newSong = new Song(newSongTitle, newSongArtist, newSongAlbum, newSongDuration);
-                    player.importSong(newSong);
-                    System.out.println("Song added to the library.");
-                    break;
-                case 8:
-                    System.out.print("Enter the playlist name: ");
-                    scanner.nextLine(); // Consume the newline character
-                    String playlistName = scanner.nextLine();
-                    player.createPlaylist(playlistName);
-                    System.out.println("Playlist created.");
-                    break;
-                case 9:
-                    player.displayLibrary();
-                    System.out.print("Enter the song number to add to the playlist: ");
-                    int songIndex = scanner.nextInt();
-                    player.displayPlaylists();
-                    System.out.print("Enter the playlist number to add the song: ");
-                    int playlistIndex = scanner.nextInt();
-                    Song songToAdd = player.getLibrary().get(songIndex - 1);
-                    Playlist playlistToAdd = player.getPlaylists().get(playlistIndex - 1);
-                    player.addSongToPlaylist(songToAdd, playlistToAdd);
-                    System.out.println("Song added to the playlist.");
-                    break;
-                case 10:
-                    player.displayPlaylists();
-                    System.out.print("Enter the playlist number to remove the song: ");
-                    int playlistToRemoveIndex = scanner.nextInt();
-                    Playlist playlistToRemove = player.getPlaylists().get(playlistToRemoveIndex - 1);
-                    playlistToRemove.displaySongs();
-                    System.out.print("Enter the song number to remove from the playlist: ");
-                    int songToRemoveIndex = scanner.nextInt();
-                    Song songToRemove = playlistToRemove.getSongs().get(songToRemoveIndex - 1);
-                    player.removeSongFromPlaylist(songToRemove, playlistToRemove);
-                    System.out.println("Song removed from the playlist.");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
+        JPanel libraryPanel = new JPanel(new BorderLayout());
+        JLabel libraryLabel = new JLabel("Music Library");
+        libraryLabel.setHorizontalAlignment(JLabel.CENTER);
+        libraryPanel.add(libraryLabel, BorderLayout.NORTH);
+
+        JPanel librarySongsPanel = new JPanel(new GridLayout(0, 1));
+        for (int i = 0; i < player.getLibrary().size(); i++) {
+            Song song = player.getLibrary().get(i);
+            JButton songButton = new JButton(song.getTitle() + " - " + song.getArtist());
+            int finalI = i;
+            songButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    player.playSong(finalI);
+                }
+            });
+            librarySongsPanel.add(songButton);
         }
+        libraryPanel.add(new JScrollPane(librarySongsPanel), BorderLayout.CENTER);
+
+        JPanel playlistPanel = new JPanel(new BorderLayout());
+        JLabel playlistLabel = new JLabel("Playlists");
+        playlistLabel.setHorizontalAlignment(JLabel.CENTER);
+        playlistPanel.add(playlistLabel, BorderLayout.NORTH);
+
+        JPanel playlistButtonsPanel = new JPanel(new GridLayout(0, 1));
+        for (int i = 0; i < player.getPlaylists().size(); i++) {
+            Playlist playlist = player.getPlaylists().get(i);
+            JButton playlistButton = new JButton(playlist.getName());
+            int finalI = i;
+            playlistButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    player.shufflePlaylist(playlist);
+                }
+            });
+            playlistButtonsPanel.add(playlistButton);
+        }
+
+        playlistPanel.add(new JScrollPane(playlistButtonsPanel), BorderLayout.CENTER);
+
+        frame.add(libraryPanel, BorderLayout.CENTER);
+        frame.add(playlistPanel, BorderLayout.EAST);
+
+        frame.setVisible(true);
     }
 }
