@@ -5,7 +5,8 @@ The Java Music Player is a comprehensive music player application developed in J
 <a href="https://freeimage.host/i/HPuqkAX"><img src="https://iili.io/HPuqkAX.md.png" alt="" border="0"></a><br /><br />
 ### Updated Version-
 <a href="https://freeimage.host/i/HiFr35G"><img src="https://iili.io/HiFr35G.md.png" alt="HiFr35G.md.png" border="0"></a>
-
+### Update Version 3.0
+<a href="https://freeimage.host/i/HsKpTSS"><img src="https://iili.io/HsKpTSS.md.png" alt="HsKpTSS.md.png" border="0"></a>
 
 ### Key Features
 
