@@ -155,7 +155,7 @@ class MusicPlayer {
             System.out.println("Song paused.");
             isPlaying = false;
         } else {
-            System.out.println("No song is currently playing.");
+            System.out.println("The song was Paused.");
         }
     }
 
@@ -165,7 +165,7 @@ class MusicPlayer {
             System.out.println("Resuming: " + song.getTitle() + " - " + song.getArtist());
             isPlaying = true;
         } else {
-            System.out.println("No paused song found.");
+            System.out.println("The song was Resumed.");
         }
     }
 
@@ -195,6 +195,10 @@ class MusicPlayer {
         java.util.Collections.shuffle(songs);
         playlist.displaySongs();
     }
+
+    public int getCurrentSongIndex() {
+        return currentSongIndex;
+    }
 }
 
 public class Main {
@@ -218,7 +222,7 @@ public class Main {
 
         JFrame frame = new JFrame("Music Player");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
 
         JPanel libraryPanel = new JPanel(new BorderLayout());
@@ -262,8 +266,55 @@ public class Main {
 
         playlistPanel.add(new JScrollPane(playlistButtonsPanel), BorderLayout.CENTER);
 
+        JPanel controlPanel = new JPanel(new FlowLayout());
+
+        ImageIcon playIcon = new ImageIcon(Main.class.getResource("play1.png"));
+        ImageIcon nextIcon = new ImageIcon(Main.class.getResource("next1.png"));
+        ImageIcon pauseIcon = new ImageIcon(Main.class.getResource("pause1.png"));
+        ImageIcon previousIcon = new ImageIcon(Main.class.getResource("previous1.png"));
+
+        JButton playButton = new JButton(playIcon);
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.resumeSong();
+            }
+        });
+
+        JButton pauseButton = new JButton(pauseIcon);
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.pauseSong();
+            }
+        });
+
+        JButton nextButton = new JButton(nextIcon);
+        nextButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.stopSong();
+                player.playSong(player.getCurrentSongIndex() + 1);
+            }
+        });
+
+        JButton previousButton = new JButton(previousIcon);
+        previousButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.stopSong();
+                player.playSong(player.getCurrentSongIndex() - 1);
+            }
+        });
+
+        controlPanel.add(previousButton);
+        controlPanel.add(playButton);
+        controlPanel.add(pauseButton);
+        controlPanel.add(nextButton);
+
         frame.add(libraryPanel, BorderLayout.CENTER);
         frame.add(playlistPanel, BorderLayout.EAST);
+        frame.add(controlPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
     }
