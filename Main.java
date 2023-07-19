@@ -210,15 +210,37 @@ public class Main {
         Song song3 = new Song("Alizeh", "Arijit Singh", "Ae Dil Hai Mushkil", 2.8);
         Song song4 = new Song("More & More", "Twice", "Single", 3.8);
         Song song5 = new Song("Metamodernity", "Vansire the band", "Reflection No.5", 3.7);
+        Song song6 = new Song("Episode 33", "She Her Her Hers", "location", 4.1);
+        Song song7 = new Song("Aayat", "Arijit Singh", "Bajirao Mastani",4.2 );
+        Song song8 = new Song("Show Me How", "Men I Trust", "Single",3.4 );
+        Song song9 = new Song("Die For YOu", "Joji", "SMITHEREENS", 3.3);
         player.importSong(song1);
         player.importSong(song2);
         player.importSong(song3);
         player.importSong(song4);
         player.importSong(song5);
+        player.importSong(song6);
+        player.importSong(song7);
+        player.importSong(song8);
+        player.importSong(song9);
+
+
         Playlist playlist1 = new Playlist("Favourite Songs");
         player.createPlaylist(playlist1.getName());
         player.addSongToPlaylist(song1, playlist1);
         player.addSongToPlaylist(song2, playlist1);
+
+        Playlist playlist2 = new Playlist("Workout Playlist");
+        player.createPlaylist(playlist2.getName());
+        player.addSongToPlaylist(song3, playlist2);
+        player.addSongToPlaylist(song4, playlist2);
+
+        Playlist playlist3 = new Playlist("Folk Songs");
+        player.createPlaylist(playlist3.getName());
+        player.addSongToPlaylist(song3, playlist3);
+        player.addSongToPlaylist(song4, playlist3);
+
+
 
         JFrame frame = new JFrame("Music Player");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -312,9 +334,19 @@ public class Main {
         controlPanel.add(pauseButton);
         controlPanel.add(nextButton);
 
+        JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        volumeSlider.addChangeListener(e -> {
+            player.setVolume(volumeSlider.getValue() / 100.0);
+        });
+        JPanel volumePanel = new JPanel(new BorderLayout());
+        volumePanel.add(new JLabel("Volume"), BorderLayout.WEST);
+        volumePanel.add(volumeSlider, BorderLayout.CENTER);
+
+
         frame.add(libraryPanel, BorderLayout.CENTER);
         frame.add(playlistPanel, BorderLayout.EAST);
         frame.add(controlPanel, BorderLayout.SOUTH);
+        frame.add(volumePanel, BorderLayout.NORTH);
 
         frame.setVisible(true);
     }
